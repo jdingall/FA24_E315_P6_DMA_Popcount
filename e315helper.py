@@ -133,6 +133,7 @@ if __name__ == "__main__":
                     'setIp: set the Pynq IP Address')
     ap.add_argument('--ip', type=str, nargs='?', help="Ip Address of Pynq")
     ap.add_argument('--vivadoOnly', action='store_true', help="Initialize only the Vivado project")
+    ap.add_argument('--pynqOnly', action='store_true', help="Initialize only the Pynq project")
     ap.add_argument('--vivado_bin', type=str, nargs='?', help="Path to Vivado binary")
 
     args = ap.parse_args()
@@ -153,6 +154,8 @@ if __name__ == "__main__":
         
         if args.vivadoOnly:
             h.build_vivado()
+        elif args.pynqOnly:
+            h.init_pynq()
         else:
             h.build_vivado()
             h.init_pynq()
