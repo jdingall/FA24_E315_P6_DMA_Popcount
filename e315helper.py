@@ -24,7 +24,9 @@ class Helper():
             with open(self.JF, 'r') as f:
                 return json.load(f)
         else:
-            return {"IP": "192.168.2.99", "Proj": "P4_Popcount"}
+            return {"IP": "192.168.2.99", 
+                    "Proj": "P4_Popcount", 
+                    "fpga_design": "bd_fpga"}
 
     def save_json(self):
          with open(self.JF, 'w') as f:
@@ -84,12 +86,21 @@ class Helper():
         for command in commands:                     
             self.run_command(command)
 
+    
     def load_bitstream(self):
-        bit =  self.MY_DIR + '/vivado_project/vivado_project.runs/impl_1/design_fpga_wrapper.bit'
-        hwh = self.MY_DIR + '/vivado_project/vivado_project.gen/sources_1/bd/design_fpga/hw_handoff/design_fpga.hwh'
+        bit =  self.MY_DIR + '/vivado_project/vivado_project.runs/impl_1/' + self.J['fpga_design'] + '_wrapper.bit'
+
+        hwh = self.MY_DIR + '/vivado_project/vivado_project.gen/sources_1/bd/'+self.J['fpga_design']+'/hw_handoff/' + \
+                            self.J['fpga_design']+'.hwh'
+
+        if not os.path.exists( hwh):
+            print ('trying alternate hwh file path')
+            hwh = self.MY_DIR + '/src/vsrc/'+ self.J['fpga_design'] + '/hw_handoff/' + self.J['fpga_design'] + '.hwh'
+
         scp = 'scp -i ' + self.priv_key
         pynq = 'xilinx@'+self.J['IP'] + ':~/jupyter_notebooks/' + self.J['Proj'] + '/Pynq/'
         commands = [ 
+                'chmod 0600 ' + self.priv_key,
                 scp + ' ' + bit + ' ' + pynq + 'bitstream.bit', 
                 scp + ' ' + hwh + ' ' + pynq + 'bitstream.hwh', 
                    ]
