@@ -20,17 +20,18 @@ class Helper():
         self.vivado = vivado
 
     def load_json(self):
-        if os.path.exists( self.JF):
-            with open(self.JF, 'r') as f:
-                return json.load(f)
-        else:
-            return {"IP": "192.168.2.99", 
-                    "Proj": "P4_Popcount", 
-                    "fpga_design": "bd_fpga"}
+        if not os.path.exists( self.JF):
+            self.save_json( {"IP": "192.168.2.99", 
+                    "Proj": "P5_Popcount_II", 
+                    "fpga_design": "bd_fpga"})
+        with open(self.JF, 'r') as f:
+            return json.load(f)
 
-    def save_json(self):
-         with open(self.JF, 'w') as f:
-            json.dump( self.J, f) 
+    def save_json(self, data=None):
+        if data  == None:
+            data = self.J
+        with open(self.JF, 'w') as f:
+            json.dump( data, f) 
 
      
 
