@@ -38,43 +38,10 @@ module popcount(
         
     );
    
-integer i,j;
-
-reg [5:0] stream_input_ones;
-reg [5:0] mmio_input_ones;
-
-
-assign S_AXIS_TREADY = 1'h1;
-
-assign COUNT_BUSY = S_AXIS_TVALID;
-
-
-//count is the only thing that needs FF's
-always_ff@(posedge S_AXIS_ACLK) begin
-    if (~S_AXIS_ARESETN) begin
-        COUNT <= 32'h0;
-    end else if (COUNT_RST) begin
-        COUNT <= 32'h0;
-    end else begin
-        COUNT <= (S_AXIS_TVALID ? COUNT + stream_input_ones : 
-                  (WRITE_VALID ? COUNT + mmio_input_ones :
-                  COUNT));
-    end
-end
-
-
-//count the immediate ones
-always_comb begin
-    stream_input_ones = 0;
-    for (i = 0; i < 32; ++i) 
-        stream_input_ones = stream_input_ones + S_AXIS_TDATA[i];
-end
-
-//count the immediate ones
-always_comb begin
-    mmio_input_ones = 0;
-    for (j = 0; j < 32; ++j) 
-        mmio_input_ones = mmio_input_ones + WRITE_DATA[j];
-end
+    assign S_AXIS_TREADY = 1'h0;
+   
+    // update me!
+    assign COUNT = 32'h0;
+    assign COUNT_BUSY = 1'h0;
 
 endmodule
