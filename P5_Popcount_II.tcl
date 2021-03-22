@@ -1,7 +1,7 @@
 #*****************************************************************************************
 # Vivado (TM) v2020.2 (64-bit)
 #
-# P4_Popcount.tcl: Tcl script for re-creating project 'vivado_project'
+# P5_Popcount_II.tcl: Tcl script for re-creating project 'vivado_project'
 #
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
 #
@@ -23,6 +23,8 @@ proc checkRequiredFiles { origin_dir} {
    "${origin_dir}/src/vsrc/axi_popcount.v" \
    "${origin_dir}/src/vtests/axi4lite_behav/axi4lite_behav_tb.sv" \
    "${origin_dir}/src/vtests/axi4lite_synth/axi4lite_synth_tb.sv" \
+   "${origin_dir}/src/vtests/axi4stream_behav/axi4stream_behav_tb.sv" \
+   "${origin_dir}/src/vtests/axi4stream_synth/axi4stream_synth_tb.sv" \
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -50,7 +52,7 @@ if { [info exists ::user_project_name] } {
 }
 
 variable script_file
-set script_file "P4_Popcount.tcl"
+set script_file "P5_Popcount_II.tcl"
 
 # Help information for this script
 proc print_help {} {
@@ -129,15 +131,16 @@ set_property -name "platform.board_id" -value "pynq-z1" -objects $obj
 set_property -name "sim.central_dir" -value "$proj_dir/${_xil_proj_name_}.ip_user_files" -objects $obj
 set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.ies_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "1" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.ies_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "2" -objects $obj
 set_property -name "webtalk.xcelium_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "6" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "14" -objects $obj
+set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -240,6 +243,64 @@ set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
 set obj [get_filesets sim_2]
 set_property -name "hbs.configure_design_for_hier_access" -value "1" -objects $obj
 set_property -name "top" -value "axi4lite_synth_tb" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'sim_3' fileset (if not found)
+if {[string equal [get_filesets -quiet sim_3] ""]} {
+  create_fileset -simset sim_3
+}
+
+# Set 'sim_3' fileset object
+set obj [get_filesets sim_3]
+set files [list \
+ [file normalize "${origin_dir}/src/vtests/axi4stream_behav/axi4stream_behav_tb.sv"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sim_3' fileset file properties for remote files
+set file "$origin_dir/src/vtests/axi4stream_behav/axi4stream_behav_tb.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_3] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
+
+
+# Set 'sim_3' fileset file properties for local files
+# None
+
+# Set 'sim_3' fileset properties
+set obj [get_filesets sim_3]
+set_property -name "hbs.configure_design_for_hier_access" -value "1" -objects $obj
+set_property -name "top" -value "axi4stream_behav_tb" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'sim_4' fileset (if not found)
+if {[string equal [get_filesets -quiet sim_4] ""]} {
+  create_fileset -simset sim_4
+}
+
+# Set 'sim_4' fileset object
+set obj [get_filesets sim_4]
+set files [list \
+ [file normalize "${origin_dir}/src/vtests/axi4stream_synth/axi4stream_synth_tb.sv"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sim_4' fileset file properties for remote files
+set file "$origin_dir/src/vtests/axi4stream_synth/axi4stream_synth_tb.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_4] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
+
+
+# Set 'sim_4' fileset file properties for local files
+# None
+
+# Set 'sim_4' fileset properties
+set obj [get_filesets sim_4]
+set_property -name "hbs.configure_design_for_hier_access" -value "1" -objects $obj
+set_property -name "top" -value "axi4stream_synth_tb" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Set 'utils_1' fileset object
@@ -252,13 +313,13 @@ set obj [get_filesets utils_1]
 
 # Adding sources referenced in BDs, if not already added
 if { [get_files axi4lite_interface.sv] == "" } {
-  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P4_Popcount/src/vsrc/axi4lite_interface.sv
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/axi4lite_interface.sv
 }
 if { [get_files popcount.sv] == "" } {
-  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P4_Popcount/src/vsrc/popcount.sv
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/popcount.sv
 }
 if { [get_files axi_popcount.v] == "" } {
-  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P4_Popcount/src/vsrc/axi_popcount.v
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/axi_popcount.v
 }
 
 
@@ -284,10 +345,11 @@ proc cr_bd_bd_fpga { parentCell } {
   set bCheckIPs 1
   if { $bCheckIPs == 1 } {
      set list_check_ips "\ 
+  xilinx.com:ip:axi_dma:7.1\
   xilinx.com:ip:processing_system7:5.5\
   xilinx.com:ip:proc_sys_reset:5.0\
+  xilinx.com:ip:smartconnect:1.0\
   xilinx.com:ip:system_ila:1.1\
-  xilinx.com:ip:xlconstant:1.1\
   "
 
    set list_ips_missing ""
@@ -371,6 +433,16 @@ proc cr_bd_bd_fpga { parentCell } {
 
 
   # Create ports
+
+  # Create instance: axi_dma_0, and set properties
+  set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0 ]
+  set_property -dict [ list \
+   CONFIG.c_include_mm2s {1} \
+   CONFIG.c_include_s2mm {0} \
+   CONFIG.c_include_sg {0} \
+   CONFIG.c_sg_include_stscntrl_strm {0} \
+   CONFIG.c_single_interface {0} \
+ ] $axi_dma_0
 
   # Create instance: axi_popcount_0, and set properties
   set block_name axi_popcount
@@ -939,7 +1011,7 @@ proc cr_bd_bd_fpga { parentCell } {
    CONFIG.PCW_PCAP_PERIPHERAL_CLKSRC {IO PLL} \
    CONFIG.PCW_PCAP_PERIPHERAL_DIVISOR0 {5} \
    CONFIG.PCW_PCAP_PERIPHERAL_FREQMHZ {200} \
-   CONFIG.PCW_PERIPHERAL_BOARD_PRESET {None} \
+   CONFIG.PCW_PERIPHERAL_BOARD_PRESET {part0} \
    CONFIG.PCW_PLL_BYPASSMODE_ENABLE {0} \
    CONFIG.PCW_PRESET_BANK0_VOLTAGE {LVCMOS 3.3V} \
    CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V} \
@@ -1171,7 +1243,7 @@ proc cr_bd_bd_fpga { parentCell } {
    CONFIG.PCW_USE_S_AXI_ACP {0} \
    CONFIG.PCW_USE_S_AXI_GP0 {0} \
    CONFIG.PCW_USE_S_AXI_GP1 {0} \
-   CONFIG.PCW_USE_S_AXI_HP0 {0} \
+   CONFIG.PCW_USE_S_AXI_HP0 {1} \
    CONFIG.PCW_USE_S_AXI_HP1 {0} \
    CONFIG.PCW_USE_S_AXI_HP2 {0} \
    CONFIG.PCW_USE_S_AXI_HP3 {0} \
@@ -1186,11 +1258,17 @@ proc cr_bd_bd_fpga { parentCell } {
   # Create instance: ps7_0_axi_periph, and set properties
   set ps7_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_0_axi_periph ]
   set_property -dict [ list \
-   CONFIG.NUM_MI {1} \
+   CONFIG.NUM_MI {2} \
  ] $ps7_0_axi_periph
 
   # Create instance: rst_ps7_0_100M, and set properties
   set rst_ps7_0_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ps7_0_100M ]
+
+  # Create instance: smartconnect_0, and set properties
+  set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_0 ]
+  set_property -dict [ list \
+   CONFIG.NUM_SI {1} \
+ ] $smartconnect_0
 
   # Create instance: system_ila_0, and set properties
   set system_ila_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila:1.1 system_ila_0 ]
@@ -1211,64 +1289,34 @@ proc cr_bd_bd_fpga { parentCell } {
    CONFIG.C_SLOT_0_INTF_TYPE {xilinx.com:interface:aximm_rtl:1.0} \
  ] $system_ila_0
 
-  # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
-  set_property -dict [ list \
-   CONFIG.CONST_VAL {0} \
- ] $xlconstant_0
-
   # Create interface connections
+  connect_bd_intf_net -intf_net axi_dma_0_M_AXIS_MM2S [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins axi_popcount_0/S_AXIS]
+  connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins axi_dma_0/M_AXI_MM2S] [get_bd_intf_pins smartconnect_0/S00_AXI]
   connect_bd_intf_net -intf_net processing_system7_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins processing_system7_0/DDR]
   connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins processing_system7_0/FIXED_IO]
   connect_bd_intf_net -intf_net processing_system7_0_M_AXI_GP0 [get_bd_intf_pins processing_system7_0/M_AXI_GP0] [get_bd_intf_pins ps7_0_axi_periph/S00_AXI]
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins axi_popcount_0/S_AXI_LITE] [get_bd_intf_pins ps7_0_axi_periph/M00_AXI]
 connect_bd_intf_net -intf_net [get_bd_intf_nets ps7_0_axi_periph_M00_AXI] [get_bd_intf_pins ps7_0_axi_periph/M00_AXI] [get_bd_intf_pins system_ila_0/SLOT_0_AXI]
   set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_intf_nets ps7_0_axi_periph_M00_AXI]
+  connect_bd_intf_net -intf_net ps7_0_axi_periph_M01_AXI [get_bd_intf_pins axi_dma_0/S_AXI_LITE] [get_bd_intf_pins ps7_0_axi_periph/M01_AXI]
+  connect_bd_intf_net -intf_net smartconnect_0_M00_AXI [get_bd_intf_pins processing_system7_0/S_AXI_HP0] [get_bd_intf_pins smartconnect_0/M00_AXI]
 
   # Create port connections
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_popcount_0/S_AXIS_ACLK] [get_bd_pins axi_popcount_0/S_AXI_LITE_ACLK] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk] [get_bd_pins system_ila_0/clk]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_popcount_0/S_AXIS_ACLK] [get_bd_pins axi_popcount_0/S_AXI_LITE_ACLK] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk] [get_bd_pins smartconnect_0/aclk] [get_bd_pins system_ila_0/clk]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_ps7_0_100M/ext_reset_in]
-  connect_bd_net -net rst_ps7_0_100M_peripheral_aresetn [get_bd_pins axi_popcount_0/S_AXIS_ARESETN] [get_bd_pins axi_popcount_0/S_AXI_LITE_ARESETN] [get_bd_pins ps7_0_axi_periph/ARESETN] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_100M/peripheral_aresetn] [get_bd_pins system_ila_0/resetn]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins axi_popcount_0/S_AXIS_TVALID] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net rst_ps7_0_100M_peripheral_aresetn [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins axi_popcount_0/S_AXIS_ARESETN] [get_bd_pins axi_popcount_0/S_AXI_LITE_ARESETN] [get_bd_pins ps7_0_axi_periph/ARESETN] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_100M/peripheral_aresetn] [get_bd_pins smartconnect_0/aresetn] [get_bd_pins system_ila_0/resetn]
 
   # Create address segments
+  assign_bd_address -offset 0x00000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces axi_dma_0/Data_MM2S] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] -force
+  assign_bd_address -offset 0x40400000 -range 0x00010000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] -force
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_popcount_0/S_AXI_LITE/reg0] -force
 
-  # Perform GUI Layout
-  regenerate_bd_layout -layout_string {
-   "ActiveEmotionalView":"Default View",
-   "Default View_ScaleFactor":"0.920784",
-   "Default View_TopLeft":"1,-13",
-   "ExpandedHierarchyInLayout":"",
-   "guistr":"# # String gsaved with Nlview 7.0r4  2019-12-20 bk=1.5203 VDI=41 GEI=36 GUI=JA:10.0 TLS
-#  -string -flagsOSRD
-preplace port DDR -pg 1 -lvl 4 -x 1110 -y 60 -defaultsOSRD
-preplace port FIXED_IO -pg 1 -lvl 4 -x 1110 -y 80 -defaultsOSRD
-preplace inst processing_system7_0 -pg 1 -lvl 1 -x 230 -y 110 -defaultsOSRD
-preplace inst ps7_0_axi_periph -pg 1 -lvl 2 -x 610 -y 260 -defaultsOSRD
-preplace inst rst_ps7_0_100M -pg 1 -lvl 1 -x 230 -y 330 -defaultsOSRD
-preplace inst xlconstant_0 -pg 1 -lvl 2 -x 610 -y 440 -defaultsOSRD
-preplace inst axi_popcount_0 -pg 1 -lvl 3 -x 960 -y 370 -defaultsOSRD
-preplace inst system_ila_0 -pg 1 -lvl 3 -x 960 -y 190 -defaultsOSRD
-preplace netloc processing_system7_0_FCLK_CLK0 1 0 3 20 220 430 130 760
-preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 2 30 230 410
-preplace netloc rst_ps7_0_100M_peripheral_aresetn 1 1 2 440 140 750
-preplace netloc xlconstant_0_dout 1 2 1 770 330n
-preplace netloc processing_system7_0_FIXED_IO 1 1 3 NJ 80 NJ 80 NJ
-preplace netloc processing_system7_0_DDR 1 1 3 NJ 60 NJ 60 NJ
-preplace netloc processing_system7_0_M_AXI_GP0 1 1 1 420 120n
-preplace netloc ps7_0_axi_periph_M00_AXI 1 2 1 780 170n
-levelinfo -pg 1 0 230 610 960 1110
-pagesize -pg 1 -db -bbox -sgen 0 0 1220 570
-"
-}
 
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
-common::send_gid_msg -ssname BD::TCL -id 2050 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
-
   close_bd_design $design_name 
 }
 # End of cr_bd_bd_fpga()
@@ -1281,13 +1329,13 @@ set_property SYNTH_CHECKPOINT_MODE "Hierarchical" [get_files bd_fpga.bd ]
 make_wrapper -files [get_files bd_fpga.bd] -import -top
 
 if { [get_files axi4lite_interface.sv] == "" } {
-  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P4_Popcount/src/vsrc/axi4lite_interface.sv
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/axi4lite_interface.sv
 }
 if { [get_files popcount.sv] == "" } {
-  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P4_Popcount/src/vsrc/popcount.sv
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/popcount.sv
 }
 if { [get_files axi_popcount.v] == "" } {
-  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P4_Popcount/src/vsrc/axi_popcount.v
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/axi_popcount.v
 }
 
 
@@ -1313,8 +1361,8 @@ proc cr_bd_bd_axi4lite_behav { parentCell } {
   set bCheckIPs 1
   if { $bCheckIPs == 1 } {
      set list_check_ips "\ 
+  xilinx.com:ip:axi4stream_vip:1.1\
   xilinx.com:ip:axi_vip:1.1\
-  xilinx.com:ip:xlconstant:1.1\
   "
 
    set list_ips_missing ""
@@ -1397,6 +1445,20 @@ proc cr_bd_bd_axi4lite_behav { parentCell } {
   set aclk_0 [ create_bd_port -dir I -type clk aclk_0 ]
   set aresetn_0 [ create_bd_port -dir I -type rst aresetn_0 ]
 
+  # Create instance: axi4stream_vip_0, and set properties
+  set axi4stream_vip_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi4stream_vip:1.1 axi4stream_vip_0 ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.INTERFACE_MODE {MASTER} \
+   CONFIG.TDATA_NUM_BYTES {4} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+ ] $axi4stream_vip_0
+
   # Create instance: axi_popcount_0, and set properties
   set block_name axi_popcount
   set block_cell_name axi_popcount_0
@@ -1436,19 +1498,13 @@ proc cr_bd_bd_axi4lite_behav { parentCell } {
    CONFIG.WUSER_WIDTH {0} \
  ] $axi_vip_0
 
-  # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
-  set_property -dict [ list \
-   CONFIG.CONST_VAL {0} \
- ] $xlconstant_0
-
   # Create interface connections
+  connect_bd_intf_net -intf_net axi4stream_vip_0_M_AXIS [get_bd_intf_pins axi4stream_vip_0/M_AXIS] [get_bd_intf_pins axi_popcount_0/S_AXIS]
   connect_bd_intf_net -intf_net axi_vip_0_M_AXI [get_bd_intf_pins axi_popcount_0/S_AXI_LITE] [get_bd_intf_pins axi_vip_0/M_AXI]
 
   # Create port connections
-  connect_bd_net -net aclk_0_1 [get_bd_ports aclk_0] [get_bd_pins axi_popcount_0/S_AXIS_ACLK] [get_bd_pins axi_popcount_0/S_AXI_LITE_ACLK] [get_bd_pins axi_vip_0/aclk]
-  connect_bd_net -net aresetn_0_1 [get_bd_ports aresetn_0] [get_bd_pins axi_popcount_0/S_AXIS_ARESETN] [get_bd_pins axi_popcount_0/S_AXI_LITE_ARESETN] [get_bd_pins axi_vip_0/aresetn]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins axi_popcount_0/S_AXIS_TVALID] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net aclk_0_1 [get_bd_ports aclk_0] [get_bd_pins axi4stream_vip_0/aclk] [get_bd_pins axi_popcount_0/S_AXIS_ACLK] [get_bd_pins axi_popcount_0/S_AXI_LITE_ACLK] [get_bd_pins axi_vip_0/aclk]
+  connect_bd_net -net aresetn_0_1 [get_bd_ports aresetn_0] [get_bd_pins axi4stream_vip_0/aresetn] [get_bd_pins axi_popcount_0/S_AXIS_ARESETN] [get_bd_pins axi_popcount_0/S_AXI_LITE_ARESETN] [get_bd_pins axi_vip_0/aresetn]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces axi_vip_0/Master_AXI] [get_bd_addr_segs axi_popcount_0/S_AXI_LITE/reg0] -force
@@ -1457,21 +1513,21 @@ proc cr_bd_bd_axi4lite_behav { parentCell } {
   regenerate_bd_layout -layout_string {
    "ActiveEmotionalView":"Default View",
    "Default View_ScaleFactor":"1.0",
-   "Default View_TopLeft":"-258,-59",
+   "Default View_TopLeft":"-472,-26",
    "ExpandedHierarchyInLayout":"",
    "guistr":"# # String gsaved with Nlview 7.0r4  2019-12-20 bk=1.5203 VDI=41 GEI=36 GUI=JA:10.0 TLS
 #  -string -flagsOSRD
-preplace port aclk_0 -pg 1 -lvl 0 -x 0 -y 120 -defaultsOSRD
-preplace port aresetn_0 -pg 1 -lvl 0 -x 0 -y 140 -defaultsOSRD
-preplace inst axi_vip_0 -pg 1 -lvl 1 -x 130 -y 200 -defaultsOSRD
-preplace inst axi_popcount_0 -pg 1 -lvl 2 -x 380 -y 220 -defaultsOSRD
-preplace inst xlconstant_0 -pg 1 -lvl 1 -x 130 -y 60 -defaultsOSRD
-preplace netloc xlconstant_0_dout 1 1 1 230J 60n
-preplace netloc aclk_0_1 1 0 2 30 270 230
-preplace netloc aresetn_0_1 1 0 2 20 280 240
-preplace netloc axi_vip_0_M_AXI 1 1 1 N 200
-levelinfo -pg 1 0 130 380 520
-pagesize -pg 1 -db -bbox -sgen -120 0 520 340
+preplace port aclk_0 -pg 1 -lvl 0 -x 0 -y 160 -defaultsOSRD
+preplace port aresetn_0 -pg 1 -lvl 0 -x 0 -y 180 -defaultsOSRD
+preplace inst axi_popcount_0 -pg 1 -lvl 2 -x 400 -y 230 -defaultsOSRD
+preplace inst axi_vip_0 -pg 1 -lvl 1 -x 140 -y 320 -defaultsOSRD
+preplace inst axi4stream_vip_0 -pg 1 -lvl 1 -x 140 -y 170 -defaultsOSRD
+preplace netloc aclk_0_1 1 0 2 30 240 260
+preplace netloc aresetn_0_1 1 0 2 20 250 270
+preplace netloc axi_vip_0_M_AXI 1 1 1 250 200n
+preplace netloc axi4stream_vip_0_M_AXIS 1 1 1 250 170n
+levelinfo -pg 1 0 140 400 540
+pagesize -pg 1 -db -bbox -sgen -120 0 540 390
 "
 }
 
@@ -1485,10 +1541,208 @@ pagesize -pg 1 -db -bbox -sgen -120 0 520 340
 # End of cr_bd_bd_axi4lite_behav()
 cr_bd_bd_axi4lite_behav ""
 set_property REGISTERED_WITH_MANAGER "1" [get_files bd_axi4lite_behav.bd ] 
+set_property SYNTH_CHECKPOINT_MODE "Hierarchical" [get_files bd_axi4lite_behav.bd ] 
 
 
 # Create wrapper file for bd_axi4lite_behav.bd
 make_wrapper -files [get_files bd_axi4lite_behav.bd] -import -top
+
+if { [get_files axi4lite_interface.sv] == "" } {
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/axi4lite_interface.sv
+}
+if { [get_files popcount.sv] == "" } {
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/popcount.sv
+}
+if { [get_files axi_popcount.v] == "" } {
+  import_files -quiet -fileset sources_1 /home/lukefahr/e315/P5_Popcount_II/src/vsrc/axi_popcount.v
+}
+
+
+# Proc to create BD bd_axi4stream_behav
+proc cr_bd_bd_axi4stream_behav { parentCell } {
+# The design that will be created by this Tcl proc contains the following 
+# module references:
+# axi_popcount
+
+
+
+  # CHANGE DESIGN NAME HERE
+  set design_name bd_axi4stream_behav
+
+  common::send_gid_msg -ssname BD::TCL -id 2010 -severity "INFO" "Currently there is no design <$design_name> in project, so creating one..."
+
+  create_bd_design $design_name
+
+  set bCheckIPsPassed 1
+  ##################################################################
+  # CHECK IPs
+  ##################################################################
+  set bCheckIPs 1
+  if { $bCheckIPs == 1 } {
+     set list_check_ips "\ 
+  xilinx.com:ip:axi4stream_vip:1.1\
+  xilinx.com:ip:axi_vip:1.1\
+  "
+
+   set list_ips_missing ""
+   common::send_gid_msg -ssname BD::TCL -id 2011 -severity "INFO" "Checking if the following IPs exist in the project's IP catalog: $list_check_ips ."
+
+   foreach ip_vlnv $list_check_ips {
+      set ip_obj [get_ipdefs -all $ip_vlnv]
+      if { $ip_obj eq "" } {
+         lappend list_ips_missing $ip_vlnv
+      }
+   }
+
+   if { $list_ips_missing ne "" } {
+      catch {common::send_gid_msg -ssname BD::TCL -id 2012 -severity "ERROR" "The following IPs are not found in the IP Catalog:\n  $list_ips_missing\n\nResolution: Please add the repository containing the IP(s) to the project." }
+      set bCheckIPsPassed 0
+   }
+
+  }
+
+  ##################################################################
+  # CHECK Modules
+  ##################################################################
+  set bCheckModules 1
+  if { $bCheckModules == 1 } {
+     set list_check_mods "\ 
+  axi_popcount\
+  "
+
+   set list_mods_missing ""
+   common::send_gid_msg -ssname BD::TCL -id 2020 -severity "INFO" "Checking if the following modules exist in the project's sources: $list_check_mods ."
+
+   foreach mod_vlnv $list_check_mods {
+      if { [can_resolve_reference $mod_vlnv] == 0 } {
+         lappend list_mods_missing $mod_vlnv
+      }
+   }
+
+   if { $list_mods_missing ne "" } {
+      catch {common::send_gid_msg -ssname BD::TCL -id 2021 -severity "ERROR" "The following module(s) are not found in the project: $list_mods_missing" }
+      common::send_gid_msg -ssname BD::TCL -id 2022 -severity "INFO" "Please add source files for the missing module(s) above."
+      set bCheckIPsPassed 0
+   }
+}
+
+  if { $bCheckIPsPassed != 1 } {
+    common::send_gid_msg -ssname BD::TCL -id 2023 -severity "WARNING" "Will not continue with creation of design due to the error(s) above."
+    return 3
+  }
+
+  variable script_folder
+
+  if { $parentCell eq "" } {
+     set parentCell [get_bd_cells /]
+  }
+
+  # Get object for parentCell
+  set parentObj [get_bd_cells $parentCell]
+  if { $parentObj == "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
+     return
+  }
+
+  # Make sure parentObj is hier blk
+  set parentType [get_property TYPE $parentObj]
+  if { $parentType ne "hier" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+     return
+  }
+
+  # Save current instance; Restore later
+  set oldCurInst [current_bd_instance .]
+
+  # Set parent object as current
+  current_bd_instance $parentObj
+
+
+  # Create interface ports
+
+  # Create ports
+  set aclk_0 [ create_bd_port -dir I -type clk aclk_0 ]
+  set aresetn_0 [ create_bd_port -dir I -type rst aresetn_0 ]
+
+  # Create instance: axi4stream_vip_0, and set properties
+  set axi4stream_vip_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi4stream_vip:1.1 axi4stream_vip_0 ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.INTERFACE_MODE {MASTER} \
+   CONFIG.TDATA_NUM_BYTES {4} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+ ] $axi4stream_vip_0
+
+  # Create instance: axi_popcount_0, and set properties
+  set block_name axi_popcount
+  set block_cell_name axi_popcount_0
+  if { [catch {set axi_popcount_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $axi_popcount_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: axi_vip_0, and set properties
+  set axi_vip_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vip:1.1 axi_vip_0 ]
+  set_property -dict [ list \
+   CONFIG.ADDR_WIDTH {32} \
+   CONFIG.ARUSER_WIDTH {0} \
+   CONFIG.AWUSER_WIDTH {0} \
+   CONFIG.BUSER_WIDTH {0} \
+   CONFIG.DATA_WIDTH {32} \
+   CONFIG.HAS_BRESP {1} \
+   CONFIG.HAS_BURST {0} \
+   CONFIG.HAS_CACHE {0} \
+   CONFIG.HAS_LOCK {0} \
+   CONFIG.HAS_PROT {1} \
+   CONFIG.HAS_QOS {0} \
+   CONFIG.HAS_REGION {0} \
+   CONFIG.HAS_RRESP {1} \
+   CONFIG.HAS_WSTRB {1} \
+   CONFIG.ID_WIDTH {0} \
+   CONFIG.INTERFACE_MODE {MASTER} \
+   CONFIG.PROTOCOL {AXI4LITE} \
+   CONFIG.READ_WRITE_MODE {READ_WRITE} \
+   CONFIG.RUSER_BITS_PER_BYTE {0} \
+   CONFIG.RUSER_WIDTH {0} \
+   CONFIG.SUPPORTS_NARROW {0} \
+   CONFIG.WUSER_BITS_PER_BYTE {0} \
+   CONFIG.WUSER_WIDTH {0} \
+ ] $axi_vip_0
+
+  # Create interface connections
+  connect_bd_intf_net -intf_net axi4stream_vip_0_M_AXIS [get_bd_intf_pins axi4stream_vip_0/M_AXIS] [get_bd_intf_pins axi_popcount_0/S_AXIS]
+  connect_bd_intf_net -intf_net axi_vip_0_M_AXI [get_bd_intf_pins axi_popcount_0/S_AXI_LITE] [get_bd_intf_pins axi_vip_0/M_AXI]
+
+  # Create port connections
+  connect_bd_net -net aclk_0_1 [get_bd_ports aclk_0] [get_bd_pins axi4stream_vip_0/aclk] [get_bd_pins axi_popcount_0/S_AXIS_ACLK] [get_bd_pins axi_popcount_0/S_AXI_LITE_ACLK] [get_bd_pins axi_vip_0/aclk]
+  connect_bd_net -net aresetn_0_1 [get_bd_ports aresetn_0] [get_bd_pins axi4stream_vip_0/aresetn] [get_bd_pins axi_popcount_0/S_AXIS_ARESETN] [get_bd_pins axi_popcount_0/S_AXI_LITE_ARESETN] [get_bd_pins axi_vip_0/aresetn]
+
+  # Create address segments
+  assign_bd_address -offset 0x40000000 -range 0x00001000 -target_address_space [get_bd_addr_spaces axi_vip_0/Master_AXI] [get_bd_addr_segs axi_popcount_0/S_AXI_LITE/reg0] -force
+
+
+  # Restore current instance
+  current_bd_instance $oldCurInst
+
+  validate_bd_design
+  save_bd_design
+  close_bd_design $design_name 
+}
+# End of cr_bd_bd_axi4stream_behav()
+cr_bd_bd_axi4stream_behav ""
+set_property REGISTERED_WITH_MANAGER "1" [get_files bd_axi4stream_behav.bd ] 
+
+
+# Create wrapper file for bd_axi4stream_behav.bd
+make_wrapper -files [get_files bd_axi4stream_behav.bd] -import -top
 
 # Create 'synth_1' run (if not found)
 if {[string equal [get_runs -quiet synth_1] ""]} {
