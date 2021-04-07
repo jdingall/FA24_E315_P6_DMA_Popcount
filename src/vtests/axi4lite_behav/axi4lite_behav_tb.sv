@@ -94,7 +94,7 @@ module axi4lite_behav_tb();
         //reset bitcount
         master_agent.AXI4LITE_WRITE_BURST(mmio_addr,prot,32'h1,resp);
         
-        for ( i = 32'h0; i < 32'h6; i++) begin
+        for (int i = 32'h0; i < 32'h6; i++) begin
             test_write_data = i;
             #1
             $display("Writing Data: %h", test_write_data);
