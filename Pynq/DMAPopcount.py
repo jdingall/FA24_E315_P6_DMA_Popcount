@@ -6,7 +6,7 @@ from pynq import allocate
 
     
     
-class DMAHardwarePopcount():
+class DMAPopcount():
     
     def __init__(self):
         pass #REMOVE
