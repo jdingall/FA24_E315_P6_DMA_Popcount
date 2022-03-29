@@ -176,7 +176,8 @@ task send_word_axi4stream(
         @(negedge ACLK);
         #1;
     end
-    
+    assert(S_AXIS_TREADY == 'h1) else $fatal(1, "Bad TREADY");
+
     @(negedge ACLK);
     S_AXIS_TVALID='h0;
     S_AXIS_TLAST='h0;
