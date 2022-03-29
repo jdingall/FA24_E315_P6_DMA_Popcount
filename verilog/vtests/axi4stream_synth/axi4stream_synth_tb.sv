@@ -225,7 +225,7 @@ initial begin
     for ( int i = 32'h0; i < 32'h100; i++) begin
         $display("Writing Data: %h", i);
         send_word_axi4stream( i, i == 32'hff);
-        @(negedge ACLK);
+        //@(negedge ACLK);
     end
 
     @(negedge ACLK);
