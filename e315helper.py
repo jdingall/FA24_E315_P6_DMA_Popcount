@@ -184,9 +184,8 @@ class Helper():
 
         commands = [
                     'git pull origin ' + self.J['branch'], 
+                    ssh + ' "cd ~/jupyter_notebooks/' + proj + ' && git commit -a -m \\"e315helper.py update\\" ' + '"',
                     'GIT_SSH_COMMAND=\'ssh -i '+self.priv_key + '\' git pull pynq ' + self.J['branch'], 
-
-                    ssh + ' "cd ~/jupyter_notebooks/' + proj + ' && git commit -a -m \\"update commit\\" ' + '"',
 
                     ssh + ' "mkdir -p ~/tmp" ',
                     ssh + ' "cd ~/tmp && git init --bare" ',
