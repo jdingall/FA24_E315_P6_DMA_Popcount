@@ -9,11 +9,12 @@ from pynq import allocate
 class DMAPopcount():
     
     def __init__(self):
-        pass #REMOVE
-        # UNCOMMENT
-        #self.overlay = Overlay('bitstream.bit')        
-        #self.mmio = self.overlay.axi_popcount_0.S_AXI_LITE
-        #self.dma = self.overlay.axi_dma_0       
+        try: 
+            self.overlay = Overlay('bitstream.bit')        
+            self.mmio = self.overlay.axi_popcount_0.S_AXI_LITE
+            self.dma = self.overlay.axi_dma_0       
+        except:  
+            raise Exception("Cound not find bitstream.bit")
 
     def name(self):
         return self.__class__.__name__ 
