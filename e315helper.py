@@ -40,6 +40,7 @@ class Helper():
         if os.path.exists('/dev/uio0'):
             logging.debug("found /dev/uio0, means Pynq")
             raise Exception("Running on Pynq not supported.  Run on the host machine.")
+
     def getVersion(self):
         return self.version
 
@@ -59,7 +60,6 @@ class Helper():
             json.dump( self.J, f) 
 
      
-
     def run_command(self, command):
         print ('running: ', command)
         result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE)

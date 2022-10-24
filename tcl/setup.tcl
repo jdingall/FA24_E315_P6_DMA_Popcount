@@ -26,7 +26,7 @@ set_property top axi4stream_synth_tb [get_filesets sim_axi4stream_synth]
 set_property file_type SystemVerilog [get_files *.sv]
 
 # set active simulation
-current_fileset -simset [ get_filesets axi4lite_synth ]
+current_fileset -simset [ get_filesets sim_axi4lite_synth ]
 
 #set the top for synthesis
 set_property top bd_fpga_wrapper [current_fileset]
